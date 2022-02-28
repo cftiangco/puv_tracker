@@ -46,7 +46,7 @@ class DriverController extends Controller
         $model->puv_platenumber = $request->puv_platenumber;
         $model->status_id = $request->status_id ?? 2;
         $model->username = 'driver_'.$default;
-        $model->password = Hash::make($default);
+        $model->password = Hash::make('driver_'.$default);
         $model->save();
         return redirect('/dashboard/drivers')->withSuccess('Record has been successfully added');
     }
