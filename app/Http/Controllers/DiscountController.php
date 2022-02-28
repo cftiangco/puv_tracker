@@ -24,8 +24,9 @@ class DiscountController extends Controller
     {
         $cards = Card::all();
         $passenger = Passenger::leftJoin('discounts','passengers.id','=','discounts.passenger_id')
+            ->join('cards','discounts.card_id','=','cards.id')
             ->where('passengers.id',$id)
-            ->first(['passengers.*','discounts.id as discount_id','discounts.image','discounts.status_id as discount_status_id']);
+            ->first(['passengers.*','discounts.id as discount_id','discounts.image','discounts.status_id as discount_status_id','cards.type','discounts.idno']);
 
         return view('/dashboard/discount_cards/view',[
             'cards' => $cards,
@@ -58,6 +59,7 @@ class DiscountController extends Controller
         
         $model = new Discount;
         $model->passenger_id = $request->passenger_id;
+        $model->idno = $request->idno;
         $model->card_id = $request->card_id;
         $model->image = $imageName;
         $model->status_id = 1;

@@ -22,6 +22,11 @@
             </div>
 
             <div class="form-group">
+                <label for="ID #">ID #</label>
+                <input type="text" class="form-control" id="idno" name="idno" required>
+            </div>
+
+            <div class="form-group">
                 <label for="image">Upload Proof of Identification</label>
                 <input type="file" class="form-control-file" id="image" name="image">
             </div>
@@ -39,9 +44,13 @@
                         @csrf
                         <input type="hidden" name="discount_id" value="{{$passenger->discount_id}}">
                         <input type="hidden" name="discount_status_id" value="{{$passenger->discount_status_id}}">
-                        <button type="submit" class="btn btn-{{$passenger->discount_status_id == 1 ? 'danger':'success'}}">Set to {{ $passenger->discount_status_id == 1 ? 'Inactive':'Active'}}</button>
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-{{$passenger->discount_status_id == 1 ? 'danger':'success'}}">Set to {{ $passenger->discount_status_id == 1 ? 'Inactive':'Active'}}</button>
+                            <p class="mt-3 ml-3">{{ $passenger->type }} - {{ $passenger->idno }}</p>
+                        </div>
                     </form>
                 </div>
+                
             @endif
         </div>
     </div>

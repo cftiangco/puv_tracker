@@ -44,7 +44,7 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Update</button>
-            <a href="/dashboard/admins/{{$user->id}}/newpassword" class="btn btn-info">New Passowrd</a>
+            <a href="/dashboard/admins/{{$user->id}}/newpassword" class="btn btn-info">New Password</a>
         </form>
     </div>
     <div class="col-6 d-none d-lg-block"></div>
