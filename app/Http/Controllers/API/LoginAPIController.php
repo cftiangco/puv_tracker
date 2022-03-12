@@ -31,8 +31,13 @@ class LoginAPIController extends Controller
         return $driver;
     }
 
-    
+
     public function login(Request $request) {
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
         $passenger = Passenger::where('username',$request->username)->first();
 
         if(!$passenger || !Hash::check($request->password,$passenger->password)) {
@@ -71,6 +76,56 @@ class LoginAPIController extends Controller
             'data' => ['msg' => 'Hello, World'],
             'message' => 'API test',
         ], 201);
+    }
+
+    public function changePassword(Request $request) {
+      $request->validate([
+          'type' => 'required',
+          'id' => 'required',
+          'current_password' => 'required',
+          'new_password' => 'required',
+      ]);
+      if($request->type === 1) {
+
+        $passenger = Passenger::find($request->id);
+
+        if(!$passenger || !Hash::check($request->current_password,$passenger->password)) {
+          return response([
+              'success' => false,
+              'message' => "Your current password is incorrect",
+          ], 201);
+        }
+
+        $passenger->password = Hash::make($request->new_password);
+        $passenger->save();
+        return response([
+            'success' => true,
+            'message' => "Your password has been successfully changed",
+        ], 201);
+      }
+
+      $driver = Driver::find($request->id);
+      if(!$driver || !Hash::check($request->current_password,$driver->password)) {
+        return response([
+            'success' => false,
+            'message' => "Your current password is incorrect",
+        ], 201);
+      }
+
+      $driver->password = Hash::make($request->new_password);
+      $driver->save();
+      return response([
+          'success' => true,
+          'message' => "Your password has been successfully changed",
+      ], 201);
+    }
+
+    public function logout() {
+        auth()->user()->tokens()->delete();
+        return response()->json([
+          'message' => 'User successfully signed out',
+          'success' => true
+        ]);
     }
 
     /**

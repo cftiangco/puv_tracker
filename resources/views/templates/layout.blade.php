@@ -69,6 +69,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Passenger's Management</h6>
                         <a class="collapse-item" href="/dashboard/passengers">List</a>
+                        <a class="collapse-item" href="/dashboard/approvals">For Approval</a>
                     </div>
                 </div>
             </li>
@@ -268,13 +269,13 @@
     <!-- Bootstrap core JavaScript-->
     <script src="{{asset('/sbadmin/vendor/jquery/jquery.min.js')}}"></script>
     <script src="{{asset('/sbadmin/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    
+
     <!-- Core plugin JavaScript-->
     <script src="{{asset('/sbadmin/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
-    
+
     <!-- Custom scripts for all pages-->
     <script src="{{asset('/sbadmin/js/sb-admin-2.min.js')}}"></script>
-    
+
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
     <script>
         $(document).ready(function() {

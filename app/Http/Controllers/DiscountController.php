@@ -22,9 +22,10 @@ class DiscountController extends Controller
 
     public function view($id)
     {
+
         $cards = Card::all();
         $passenger = Passenger::leftJoin('discounts','passengers.id','=','discounts.passenger_id')
-            ->join('cards','discounts.card_id','=','cards.id')
+            ->leftJoin('cards','discounts.card_id','=','cards.id')
             ->where('passengers.id',$id)
             ->first(['passengers.*','discounts.id as discount_id','discounts.image','discounts.status_id as discount_status_id','cards.type','discounts.idno']);
 
@@ -46,7 +47,7 @@ class DiscountController extends Controller
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ]);
 
-        $imageName = uniqid('ID_').'.'.$request->image->extension();  
+        $imageName = uniqid('ID_').'.'.$request->image->extension();
         $request->image->move(public_path('images'), $imageName);
 
         $discount = Discount::where('passenger_id',$request->passenger_id)->first();
@@ -56,13 +57,13 @@ class DiscountController extends Controller
                 $discount->delete();
             }
         }
-        
+
         $model = new Discount;
         $model->passenger_id = $request->passenger_id;
         $model->idno = $request->idno;
         $model->card_id = $request->card_id;
         $model->image = $imageName;
-        $model->status_id = 1;
+        $model->status_id = 2;
 
         $model->save();
         return redirect()->back()->with('success','Discount card has been successfully updated');

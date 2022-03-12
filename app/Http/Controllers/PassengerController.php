@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 class PassengerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resourcet
      *
      * @return \Illuminate\Http\Response
      */
@@ -21,7 +21,7 @@ class PassengerController extends Controller
         $passengers = Passenger::join('passenger_statuses','passengers.status_id','=','passenger_statuses.id')
             ->leftJoin('discounts','passengers.id','=','discounts.passenger_id')
             ->leftJoin('cards','discounts.card_id','=','cards.id')
-            ->get(['passengers.*','passenger_statuses.description','cards.type as discount']);
+            ->get(['passengers.*','passenger_statuses.description','cards.type as discount','discounts.status_id as discount_status_id']);
         return view('dashboard/passengers/list',['passengers' => $passengers]);
     }
 
@@ -56,7 +56,7 @@ class PassengerController extends Controller
         $balance = new Balance;
         $balance->passenger_id = $model->id;
         $balance->save();
-        
+
         return redirect('/dashboard/passengers')->withSuccess('Record has been successfully added');
     }
 
@@ -70,7 +70,7 @@ class PassengerController extends Controller
                 'passengers.*','passenger_statuses.description','cards.type as discount','balances.id as balance_id'
             ]);
 
-            $balance = DB::select("SELECT SUM(topups.amount) AS `balance` FROM balances 
+            $balance = DB::select("SELECT SUM(topups.amount) AS `balance` FROM balances
             INNER JOIN topups ON topups.balance_id = balances.id WHERE passenger_id = ?",[$id]);
 
         return view('dashboard/passengers/view',[

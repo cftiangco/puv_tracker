@@ -27,7 +27,11 @@ Route::get('/login',[AdminController::class,'login']);
 Route::post('/login',[AdminController::class,'loggedin']);
 
 Route::group(['middleware' => 'admin.auth'], function() {
-    
+
+    Route::get('/', function () {
+        return view('dashboard');
+    });
+
     Route::get('/dashboard', function () {
         return view('dashboard');
     });
@@ -71,6 +75,10 @@ Route::group(['middleware' => 'admin.auth'], function() {
     Route::get('/dashboard/discounts/{id}', [CardController::class,'show']);
     Route::put('/dashboard/discounts/{id}', [CardController::class,'update']);
     Route::delete('/dashboard/discounts/{id}', [CardController::class,'destroy']);
+
+    Route::get('/dashboard/approvals', [CardController::class,'approvals']);
+    Route::post('/dashboard/approvals/{id}', [CardController::class,'approved']);
+    Route::get('/dashboard/approvals/{id}', [CardController::class,'viewDiscount']);
 
     Route::get('/dashboard/passengers/{id}/discounts',[DiscountController::class,'view']);
     Route::post('/dashboard/passengers/discounts',[DiscountController::class,'store']);

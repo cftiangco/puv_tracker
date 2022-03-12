@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Slot;
+use Illuminate\Support\Facades\DB;
 
 class DriverAPIController extends Controller
 {
@@ -20,18 +21,19 @@ class DriverAPIController extends Controller
 
     public function schedules($id) {
         /* get all driver active schedule, required parameter driver_id*/
-        $slots = Slot::where('driver_id',$id)->
-            join('schedules','slots.schedule_id','=','schedules.id')
-            ->get([
-                'slots.id',
-                'slots.schedule_id',
-                'schedules.location_from',
-                'schedules.location_to',
-                'schedules.departing_time',
-                'schedules.fee',
-                'schedules.number_of_seats'
-            ]);
-        
+        $slots = Slot::where('driver_id',$id)
+        ->select(
+          DB::raw("
+          slots.id,
+          slots.schedule_id,
+          schedules.location_from,
+          schedules.location_to,
+          schedules.departing_time,
+          schedules.fee,
+          schedules.number_of_seats,
+          concat(schedules.location_from,' To ',schedules.location_to,' (',TIME_FORMAT(schedules.departing_time,'%h:%i %p'),')') as `description`
+          "))->join('schedules','slots.schedule_id','=','schedules.id')->get();
+
         return response([
             'success' => true,
             'data' => $slots,

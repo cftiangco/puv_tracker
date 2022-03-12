@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Card;
+use App\Models\Discount;
 
 class CardController extends Controller
 {
@@ -82,4 +83,32 @@ class CardController extends Controller
         $model->delete();
         return redirect('/dashboard/discounts')->withFail('Record has been successfully deleted');
     }
+
+    public function approvals()
+    {
+        $discounts =  Discount::join('passengers','discounts.passenger_id','=','passengers.id')
+          ->join('cards','discounts.card_id','=','cards.id')
+          ->where('discounts.status_id',2)
+          ->get(['discounts.id','passengers.last_name','passengers.first_name','passengers.middle_name','passengers.username','cards.type','discounts.created_at']);
+
+        return view('/dashboard/approvals/list',['discounts' => $discounts]);
+    }
+
+    public function approved($id)
+    {
+        $model = Discount::find($id);
+        $model->status_id = 1;
+        $model->update();
+        return redirect('/dashboard/approvals')->withSuccess('Request has been successfully approved');
+    }
+
+    public function viewDiscount($id)
+    {
+      $discount =  Discount::join('passengers','discounts.passenger_id','=','passengers.id')
+        ->join('cards','discounts.card_id','=','cards.id')
+        ->where('discounts.id',$id)
+        ->first(['discounts.id','passengers.last_name','passengers.first_name','passengers.gender','passengers.birthday','passengers.username','passengers.mobileno','passengers.middle_name','passengers.username','cards.type','discounts.created_at','discounts.image','discounts.idno']);
+      return view('/dashboard/approvals/view',['discount' => $discount]);
+    }
+
 }

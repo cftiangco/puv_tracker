@@ -43,7 +43,7 @@
                             <td>{{ getAge($row->birthday) }}</td>
                             <td>{{ $row->mobileno }}</td>
                             <td>{{ $row->gender == 1 ? 'Male':'Female' }}</td>
-                            <td>{{ $row->discount ?? 'N/A'}}</td>
+                            <td>{{ $row->discount ?? 'None'}} {{ $row->discount_status_id ? $row->discount_status_id === 1 ? '(Active)':'Inactive':''}}</td>
                             <td>{{ $row->description }}</td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Basic example">

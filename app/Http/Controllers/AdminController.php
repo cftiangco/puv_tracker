@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the resource. test only
      *
      * @return \Illuminate\Http\Response
      */
@@ -24,12 +24,12 @@ class AdminController extends Controller
     }
 
     public function register() {
-        
+
         return view('dashboard/admins/register', [
             'roles' => $roles = Role::all()
         ]);
     }
-    
+
 
     public function login() {
         return view('dashboard/admins/login');
@@ -132,6 +132,6 @@ class AdminController extends Controller
      */
     public function destroy($id)
     {
-        //   
+        //
     }
 }
