@@ -45,6 +45,7 @@ Route::middleware('auth:sanctum')->group( function () {
     Route::post('/trips/{id}/drive',[TripAPIController::class,'drive']); //driver_id
 
     Route::get('/checkin/{passenger_id}/info/{trip_id}',[PassengerTripAPIController::class,'checkinInfo']);
+    Route::get('/checkin/{trip_id}/validation',[PassengerTripAPIController::class,'validation']);
     Route::get('/active/{id}/trip',[PassengerTripAPIController::class,'activeTrip']);
     Route::post('/checkin',[PassengerTripAPIController::class,'store']);
     Route::get('/passengers/{id}',[PassengerAPIController::class,'show']);

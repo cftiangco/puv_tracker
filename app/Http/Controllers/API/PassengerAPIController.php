@@ -111,7 +111,7 @@ class PassengerAPIController extends Controller
       $balance = $this->getBalance($id);
       return response([
         'success' => true,
-        'data' => $balance,
+        'data' => $balance ?? 0,
         'message' => 'Passenger balance',
       ], 201);
     }

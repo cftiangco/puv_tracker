@@ -93,7 +93,9 @@ class TripAPIController extends Controller
         concat(passengers.last_name,', ',passengers.first_name,' ',passengers.middle_name) as full_name,
         schedules.fee,
         trip_passenger_statuses.description as status,cards.type,
-        TIME_FORMAT(trip_passengers.updated_at,'%h:%i %p') as arrived"))
+        TIME_FORMAT(trip_passengers.updated_at,'%h:%i %p') as arrived,
+        trip_passengers.fare
+        "))
         ->join('trip_passengers','trips.id','=','trip_passengers.trip_id')
         ->join('passengers','trip_passengers.passenger_id','=','passengers.id')
         ->join('slots','trips.slot_id','=','slots.id')
@@ -103,8 +105,11 @@ class TripAPIController extends Controller
         ->leftJoin('cards','discounts.card_id','=','cards.id')
         ->get();
 
-        $status = Trip::join('slots','slots.id','=','trips.status_id')
-        ->where('slots.driver_id','=',$id)->first(['trips.status_id']);
+        $status = Trip::where('slots.driver_id','=',$id)
+        ->join('slots','slots.id','=','trips.slot_id')
+        ->first(['trips.status_id']);
+
+
         return response([
             'status_id' => $status->status_id ?? 0,
             'success' => true,

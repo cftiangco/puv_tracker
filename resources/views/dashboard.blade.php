@@ -9,7 +9,7 @@
  <!-- Content Row -->
 <div class="row">
     <div class="col">
-        {{Session::get('user')}}
+        <!-- {{Session::get('user')}} -->
     </div>
 </div>
 @stop

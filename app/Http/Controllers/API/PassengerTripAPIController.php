@@ -30,10 +30,6 @@ class PassengerTripAPIController extends Controller
      */
     public function store(Request $request)
     {
-        // $fare = Trip::where('trips.id','=',$request->trip_id)
-        // ->join('slots','slots.id','=','trips.slot_id')
-        // ->join('schedules','schedules.id','=','slots.schedule_id')
-        // ->first(['schedules.fee']);
 
         $request->validate([
             'trip_id' => 'required',
@@ -69,7 +65,7 @@ class PassengerTripAPIController extends Controller
       return response([
           'success' => true,
           'data' => $result,
-          'balance' => $balance,
+          'balance' => $balance ?? 0,
           'message' => 'Info has been successfully retured',
       ], 201);
     }
@@ -82,12 +78,44 @@ class PassengerTripAPIController extends Controller
       ->pluck('balance')->first();
     }
 
+    /*
+      param int check_in id
+    */
+    public function validation($id) {
+      $seats = Trip::where('trips.id',$id)
+      ->join('slots','slots.id','=','trips.slot_id')
+      ->join('schedules','schedules.id','=','slots.schedule_id')
+      ->pluck('number_of_seats')->first();
+
+      $passengers = TripPassenger::where('trip_id',$id)
+      ->select(DB::raw("COUNT(*) AS passengers"))
+      ->pluck('passengers')->first();
+
+      // $passengers = 20;
+
+      if(intval($seats) > intval($passengers)) {
+        return response([
+          'success' => true,
+          'number_of_seats' => $seats,
+          'passengers' => $passengers,
+          'message' => "There's an available slots",
+        ], 201);
+      }
+
+      return response([
+        'success' => false,
+        'number_of_seats' => $seats,
+        'passengers' => $passengers,
+        'message' => "Sorry there's no available slots",
+      ], 201);
+    }
+
     /* param int passenger_id */
     public function activeTrip($id) {
       $trip = TripPassenger::where('trip_passengers.passenger_id','=',$id)
       ->select(DB::raw("
         trip_passengers.id,
-        trip_passengers.location, 
+        trip_passengers.location,
         schedules.location_to,
         TIME_FORMAT(schedules.departing_time,'%h:%i %p') as departing,
         trip_passengers.fare
